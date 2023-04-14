@@ -1,6 +1,6 @@
 package model
 
-import IdGenerator
+import generator.IdGenerator
 import event.UserSignupEvent
 import addUUID
 import exception.ModelException
@@ -24,7 +24,6 @@ class ModelTest {
     fun randomUserTest2() {
         val userIdGenerator = IdGenerator("${"".addUUID(5)}-user-")
         val model = Model(userIdGenerator, userIdGenerator)
-        model.subscribe(UserSignupEvent(userId = userIdGenerator.generate()))
         val randomUser = model.randomUser()
         println(randomUser)
     }
@@ -35,7 +34,7 @@ class ModelTest {
         val userIdGenerator = IdGenerator("${"".addUUID(5)}-user-")
         val model = Model(userIdGenerator, userIdGenerator)
         repeat(10000) {
-            model.subscribe(UserSignupEvent(userId = userIdGenerator.generate()))
+            model.users[userIdGenerator.generate()] = User()
         }
         val map = HashMap<Int, Int>()
         repeat(10000) {
