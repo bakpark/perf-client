@@ -1,21 +1,25 @@
 package model
 
-import action.*
+import IdGenerator
+import event.*
 import exception.ModelException
 import java.util.*
 
-class Model : ActionConsumer {
+class Model(
+    private val userIdGenerator: IdGenerator,
+    private val roomIdGenerator: IdGenerator
+) : EventSubscriber {
     private val users = TreeMap<String, User>()
     private val rooms = TreeMap<String, Room>()
 
-    override fun consume(action: Action) {
-        when (action) {
-            is PostChatAction -> onPostChat(action.roomId, action.senderId, action.message)
-            is CreateRoomAction -> onCreateRoom(action.roomId, action.users)
-            is DeleteRoomAction -> onDeleteRoom(action.roomId)
-            is UserEntranceAction -> onUserEntrance(action.roomId, action.userId)
-            is UserSignupAction -> onUserSignup(action.userId)
-            is UserWithdrawAction -> onUserWithdraw(action.userId)
+    override fun subscribe(event: Event) {
+        when (event) {
+            is PostChatEvent -> onPostChat(event.roomId, event.senderId, event.message)
+            is CreateRoomEvent -> onCreateRoom(event.roomId, event.users)
+            is DeleteRoomEvent -> onDeleteRoom(event.roomId)
+            is UserEntranceEvent -> onUserEntrance(event.roomId, event.userId)
+            is UserSignupEvent -> onUserSignup(event.userId)
+            is UserWithdrawEvent -> onUserWithdraw(event.userId)
         }
     }
 
@@ -50,8 +54,26 @@ class Model : ActionConsumer {
         users.remove(userId)
     }
 
-    fun randomUser(upperBound: String) = users.lowerKey(upperBound) ?: throw ModelException("matched user not exist")
+    fun randomUser(): User {
+        if(users.isEmpty()){
+            throw ModelException("user is empty")
+        }
+        while (true){
+            val entry = users.lowerEntry(userIdGenerator.generate()) ?: continue
+            return entry.value
+        }
+    }
 
-    fun randomRoom(upperBound: String) = rooms.lowerKey(upperBound) ?: throw ModelException("matched room not exist")
+
+    fun randomRoom(): Room {
+        if(rooms.isEmpty()){
+            throw ModelException("room is empty")
+        }
+        while (true){
+            val entry = rooms.lowerEntry(roomIdGenerator.generate()) ?: continue
+            return entry.value
+        }
+    }
+
 
 }
