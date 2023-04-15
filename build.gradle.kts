@@ -11,6 +11,12 @@ repositories {
 }
 
 dependencies {
+}
+dependencies {
+    implementation ("io.prometheus:simpleclient:0.12.0")
+    implementation ("io.prometheus:simpleclient_hotspot:0.12.0")
+    implementation ("io.prometheus:simpleclient_logback:0.12.0")
+    implementation ("ch.qos.logback:logback-classic:1.2.9")
     testImplementation(kotlin("test"))
 }
 

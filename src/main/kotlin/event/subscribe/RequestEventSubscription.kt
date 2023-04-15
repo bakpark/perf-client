@@ -1,7 +1,7 @@
 package event.subscribe
 
 import event.Event
-import generator.RequestBucket
+import common.RequestBucket
 import java.net.http.HttpClient
 
 class RequestEventSubscription(
@@ -11,6 +11,6 @@ class RequestEventSubscription(
     val requestBucket = RequestBucket(requestPerSeconds)
     val httpClient = HttpClient.newHttpClient()
     override fun subscribe(event: Event) {
-        TODO("Not yet implemented")
+        // todo
     }
 }

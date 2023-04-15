@@ -1,3 +1,4 @@
+import common.addUUID
 import generator.IdGenerator
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

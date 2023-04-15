@@ -4,6 +4,18 @@ import model.User
 
 interface Event
 
+enum class EventType{
+    POST_CHAT,
+    CREATE_ROOM,
+    DELETE_ROOM,
+    USER_ENTRANCE,
+    USER_SIGNUP,
+    USER_WITHDRAW,
+    GET_ROOM_USER_INVOLVED,
+    GET_CHATS_USER_RECEIVED,
+    GET_CHATS_IN_THE_ROOM
+}
+
 class PostChatEvent(
     val roomId: String,
     val senderId: String,
@@ -33,8 +45,7 @@ class UserWithdrawEvent(
 ) : Event
 
 class GetRoomUserInvolvedEvent(
-    val roomId: String,
-    val users: List<User>,
+    val userId: String,
     val limit: Int
 ) : Event
 

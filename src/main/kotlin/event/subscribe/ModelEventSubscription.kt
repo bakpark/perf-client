@@ -26,7 +26,7 @@ class ModelEventSubscription(
 
     private fun onCreateRoom(roomId: String, userIds: List<String>) {
         val users = userIds.map { model.users[it]!! }
-        val room = Room(ArrayList(users))
+        val room = Room(roomId, ArrayList(users))
         model.rooms[roomId] = room
     }
 
@@ -44,7 +44,7 @@ class ModelEventSubscription(
     }
 
     private fun onUserSignup(userId: String) {
-        model.users[userId] = User()
+        model.users[userId] = User(userId)
     }
 
     private fun onUserWithdraw(userId: String) {

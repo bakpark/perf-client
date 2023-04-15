@@ -1,4 +1,8 @@
 
 fun main(args: Array<String>) {
-    Runner()
+    val runner = Runner()
+
+    repeat(1000){
+        runner.run()
+    }
 }

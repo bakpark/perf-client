@@ -1,6 +1,7 @@
 package model
 
 class User(
+    val userId: String,
     val rooms: MutableList<Room> = mutableListOf()
 ) : ChatAddable() {
 
@@ -8,7 +9,7 @@ class User(
         rooms.add(room)
     }
 
-    fun removeRoom(room: Room){
+    fun removeRoom(room: Room) {
         rooms.remove(room)
     }
 }

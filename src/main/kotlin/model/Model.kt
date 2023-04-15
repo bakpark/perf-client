@@ -1,7 +1,7 @@
 package model
 
-import generator.IdGenerator
 import exception.ModelException
+import generator.IdGenerator
 import java.util.*
 
 class Model(
@@ -19,6 +19,21 @@ class Model(
             val entry = users.lowerEntry(userIdGenerator.generate()) ?: continue
             return entry.value
         }
+    }
+
+    fun randomUser(n: Int): List<User> {
+        if (users.size < n) {
+            throw ModelException("input exceed user size")
+        }
+        val userList = mutableListOf<User>()
+        while (userList.size < n) {
+            val usr = randomUser()
+            if (userList.contains(usr)) {
+                continue
+            }
+            userList.add(usr)
+        }
+        return userList
     }
 
 

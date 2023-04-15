@@ -1,6 +1,6 @@
 package generator
 
-import addUUID
+import common.addUUID
 
 class IdGenerator(private val prefix: String) {
     fun generate(): String = prefix.addUUID(16)

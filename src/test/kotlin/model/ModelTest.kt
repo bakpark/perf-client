@@ -1,8 +1,7 @@
 package model
 
 import generator.IdGenerator
-import event.UserSignupEvent
-import addUUID
+import common.addUUID
 import exception.ModelException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
@@ -24,6 +23,8 @@ class ModelTest {
     fun randomUserTest2() {
         val userIdGenerator = IdGenerator("${"".addUUID(5)}-user-")
         val model = Model(userIdGenerator, userIdGenerator)
+        val id = userIdGenerator.generate()
+        model.users[id] = User(id)
         val randomUser = model.randomUser()
         println(randomUser)
     }
@@ -34,7 +35,8 @@ class ModelTest {
         val userIdGenerator = IdGenerator("${"".addUUID(5)}-user-")
         val model = Model(userIdGenerator, userIdGenerator)
         repeat(10000) {
-            model.users[userIdGenerator.generate()] = User()
+            val id = userIdGenerator.generate()
+            model.users[id] = User(id)
         }
         val map = HashMap<Int, Int>()
         repeat(10000) {
