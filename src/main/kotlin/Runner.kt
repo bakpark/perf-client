@@ -1,12 +1,13 @@
 import common.addUUID
-import event.publish.ModelEventPublisher
-import event.subscribe.ModelEventSubscription
-import event.subscribe.RequestEventSubscription
+import event.ModelEventPublisher
 import generator.IdGenerator
 import generator.ModelEvaluator
 import generator.ModelEventGenerator
+import metric.EventSubscriptionForMetric
+import model.EventSubscriptionForModel
 import model.Model
 import org.slf4j.LoggerFactory
+import request.EventSubscriptionForRequest
 import kotlin.system.exitProcess
 
 class Runner(
@@ -22,8 +23,9 @@ class Runner(
     private var modelEvaluator: ModelEvaluator
     private var modelEventGenerator: ModelEventGenerator
 
-    private var modelEventSubscription: ModelEventSubscription
-    private var requestEventSubscription: RequestEventSubscription
+    private var eventSubscriptionForModel: EventSubscriptionForModel
+    private var eventSubscriptionForRequest: EventSubscriptionForRequest
+    private var eventSubscriptionForMetric: EventSubscriptionForMetric
     private var modelEventPublisher: ModelEventPublisher
 
 
@@ -45,9 +47,11 @@ class Runner(
             modelEventGenerator =
                 ModelEventGenerator(model, modelEvaluator, userIdGenerator, roomIdGenerator, messageGenerator)
 
-            modelEventSubscription = ModelEventSubscription(model)
-            requestEventSubscription = RequestEventSubscription(baseUrl, requestPerSec)
-            modelEventPublisher = ModelEventPublisher(modelEventSubscription, requestEventSubscription)
+            eventSubscriptionForModel = EventSubscriptionForModel(model)
+            eventSubscriptionForRequest = EventSubscriptionForRequest(baseUrl, requestPerSec)
+            eventSubscriptionForMetric = EventSubscriptionForMetric()
+            modelEventPublisher =
+                ModelEventPublisher(eventSubscriptionForModel, eventSubscriptionForRequest, eventSubscriptionForMetric)
 
         } catch (e: Exception) {
             e.printStackTrace()

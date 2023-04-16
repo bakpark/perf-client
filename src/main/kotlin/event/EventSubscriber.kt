@@ -1,4 +1,4 @@
-package event.subscribe
+package event
 
 import event.Event
 

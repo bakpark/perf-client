@@ -1,13 +1,14 @@
-package event.subscribe
+package request
 
 import event.Event
 import common.RequestBucket
+import event.EventSubscriber
 import java.net.http.HttpClient
 
-class RequestEventSubscription(
+class EventSubscriptionForRequest(
     val baseUrl: String,
     requestPerSeconds: Int
-):EventSubscriber {
+): EventSubscriber {
     val requestBucket = RequestBucket(requestPerSeconds)
     val httpClient = HttpClient.newHttpClient()
     override fun subscribe(event: Event) {

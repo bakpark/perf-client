@@ -17,6 +17,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.2.9")
     implementation("io.micrometer:micrometer-core:1.8.0")
     implementation("io.micrometer:micrometer-registry-prometheus:1.8.0")
+    implementation("io.github.mweirauch:micrometer-jvm-extras:0.2.2")
     testImplementation(kotlin("test"))
 }
 

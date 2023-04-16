@@ -1,12 +1,8 @@
-package event.subscribe
+package model
 
 import event.*
-import model.Chat
-import model.Model
-import model.Room
-import model.User
 
-class ModelEventSubscription(
+class EventSubscriptionForModel(
     private val model: Model
 ) : EventSubscriber {
     override fun subscribe(event: Event) {
