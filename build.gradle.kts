@@ -13,10 +13,10 @@ repositories {
 dependencies {
 }
 dependencies {
-    implementation ("io.prometheus:simpleclient:0.12.0")
-    implementation ("io.prometheus:simpleclient_hotspot:0.12.0")
-    implementation ("io.prometheus:simpleclient_pushgateway:0.12.0")
-    implementation ("ch.qos.logback:logback-classic:1.2.9")
+    implementation("io.prometheus:simpleclient_pushgateway:0.12.0")
+    implementation("ch.qos.logback:logback-classic:1.2.9")
+    implementation("io.micrometer:micrometer-core:1.8.0")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.8.0")
     testImplementation(kotlin("test"))
 }
 

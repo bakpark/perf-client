@@ -10,7 +10,7 @@ class MetricCollectRunner {
         val pushGwAddress: String = System.getProperty("prometheus.gw_address") ?: return
         val prometheusInterval: Long = System.getProperty("prometheus.interval")?.toLong() ?: 15L
 
-        metricCollector = MetricPusher(pushGwAddress = pushGwAddress)
+        metricCollector = MicrometerMetricPusher(pushGwAddress = pushGwAddress)
 
         // 지표를 주기적으로 출력하는 스케줄러 생성
         val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
