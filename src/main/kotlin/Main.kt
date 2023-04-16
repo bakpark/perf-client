@@ -1,11 +1,11 @@
-import metric.MetricCollector
+import metric.MetricCollectRunner
 
 fun main(args: Array<String>) {
     val runner = Runner()
 
-    MetricCollector().run()
+    MetricCollectRunner().run()
 
-    repeat(1000) {
+    while (true) {
         runner.run()
     }
 }

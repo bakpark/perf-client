@@ -1,28 +1,11 @@
 <configuration>
-    <appender name="PROMETHEUS" class="io.prometheus.client.logback.InstrumentedAppender">
-        <appender-ref ref="PROMETHEUS_FILE" />
-    </appender>
-    <appender name="PROMETHEUS_FILE" class="ch.qos.logback.core.FileAppender">
-        <file>logs/prometheus/metrics.log</file>
-        <encoder>
-            <pattern>%msg%n</pattern>
-        </encoder>
-    </appender>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <logger name="prometheus" level="info" additivity="true">
-        <appender-ref ref="PROMETHEUS"/>
-    </logger>
-
-    <root level="info">
-        <appender-ref ref="PROMETHEUS"/>
-    </root>
-
-    <root level="debug">
+    <root level="error">
         <appender-ref ref="STDOUT"/>
     </root>
 </configuration>
