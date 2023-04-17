@@ -1,7 +1,5 @@
 package event
 
-import model.User
-
 interface Event
 
 enum class EventType{
@@ -11,7 +9,7 @@ enum class EventType{
     USER_ENTRANCE,
     USER_SIGNUP,
     USER_WITHDRAW,
-    GET_ROOM_USER_INVOLVED,
+    GET_ROOMS_USER_INVOLVED,
     GET_CHATS_USER_RECEIVED,
     GET_CHATS_IN_THE_ROOM
 }
@@ -44,7 +42,7 @@ class UserWithdrawEvent(
     val userId: String
 ) : Event
 
-class GetRoomUserInvolvedEvent(
+class GetRoomsUserInvolvedEvent(
     val userId: String,
     val limit: Int
 ) : Event

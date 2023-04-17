@@ -62,8 +62,8 @@ class ModelEventGenerator(
                         return UserWithdrawEvent(model.randomUser().userId)
                     }
 
-                    EventType.GET_ROOM_USER_INVOLVED -> {
-                        return GetRoomUserInvolvedEvent(model.randomRoom().roomId, Constant.contentLimitSize)
+                    EventType.GET_ROOMS_USER_INVOLVED -> {
+                        return GetRoomsUserInvolvedEvent(model.randomRoom().roomId, Constant.contentLimitSize)
                     }
 
                     EventType.GET_CHATS_USER_RECEIVED -> {
@@ -76,7 +76,7 @@ class ModelEventGenerator(
                 }
             } catch (e: ModelException) {
                 // retry when catch exception
-                logger.warn("model generation fail strategy:$strategy eventType:$eventType failMsg:${e.message}")
+                logger.debug("model generation fail strategy:$strategy eventType:$eventType failMsg:${e.message}")
             } catch (e: Exception) {
                 // retry when catch exception
                 e.printStackTrace()

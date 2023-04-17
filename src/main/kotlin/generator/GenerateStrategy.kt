@@ -40,7 +40,7 @@ enum class GenerateStrategy(
         if (rv < ratePostChat) return EventType.POST_CHAT
         rv -= ratePostChat
 
-        if (rv < rateGetRoomUserInvolved) return EventType.GET_ROOM_USER_INVOLVED
+        if (rv < rateGetRoomUserInvolved) return EventType.GET_ROOMS_USER_INVOLVED
         rv -= rateGetRoomUserInvolved
         if (rv < rateGetChatsUserReceived) return EventType.GET_CHATS_USER_RECEIVED
         rv -= rateGetChatsUserReceived

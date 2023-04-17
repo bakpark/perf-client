@@ -17,7 +17,7 @@ class MicrometerMetricPusher(
 
     override fun collect() {
         try {
-            pushGateway.push(MetricCollector.registry.prometheusRegistry, Constant.instanceName, grouping)
+            pushGateway.pushAdd(MetricCollector.registry.prometheusRegistry, Constant.instanceName, grouping)
         } catch (e: IOException) {
             log.error("Error pushing metrics to Pushgateway: " + e.message, e)
         }

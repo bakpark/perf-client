@@ -47,4 +47,11 @@ class Model(
         }
     }
 
+    fun randomRoomSize(): Int {
+        if (rooms.isEmpty()) {
+            return 0
+        }
+        return randomRoom().users.size
+    }
+
 }
