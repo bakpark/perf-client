@@ -18,6 +18,7 @@ dependencies {
     implementation("io.micrometer:micrometer-core:1.8.0")
     implementation("io.micrometer:micrometer-registry-prometheus:1.8.0")
     implementation("io.github.mweirauch:micrometer-jvm-extras:0.2.2")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
     testImplementation(kotlin("test"))
 }
 

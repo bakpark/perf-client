@@ -2,6 +2,7 @@ package common
 
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import java.time.LocalDateTime
 
 class UtilTest {
 
@@ -17,6 +18,17 @@ class UtilTest {
         if (failLimit < 0) {
             Assertions.fail<Nothing>("in $tryCnt trial same id occur ${10 - failLimit} times")
         }
+    }
+
+    @Test
+    fun minusNanos(){
+        val requestPerSecond = 100
+        val nsBetween = (1_000_000_000L) / requestPerSecond
+
+        val now = LocalDateTime.now()
+        val last = now.minusNanos(nsBetween)
+
+        Assertions.assertEquals(nsBetween, now.minusNanos(last))
     }
 
     private fun existSameId(): Boolean {
