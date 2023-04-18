@@ -7,19 +7,16 @@ import java.io.IOException
 import java.util.*
 
 
-class MicrometerMetricPusher(
-    pushGwAddress: String
-) : MetricCollector {
+class MicrometerMetricPusher(prometheusPushUrl: String) : MetricCollector {
     private val log = LoggerFactory.getLogger(MicrometerMetricPusher::class.java)
-    private val grouping = Collections.singletonMap("application", Constant.instanceName)
-
-    private val pushGateway: PushGateway = PushGateway(pushGwAddress)
+    private val grouping = Collections.singletonMap("application", Constant.applicationName)
+    private val pushGateway: PushGateway = PushGateway(prometheusPushUrl)
 
     override fun collect() {
         try {
-            pushGateway.pushAdd(MetricCollector.registry.prometheusRegistry, Constant.instanceName, grouping)
+            pushGateway.pushAdd(MetricCollector.registry.prometheusRegistry, Constant.applicationName, grouping)
         } catch (e: IOException) {
-            log.error("Error pushing metrics to Pushgateway: " + e.message, e)
+            log.error("Error pushing metrics to Push gateway: " + e.message, e)
         }
     }
 }

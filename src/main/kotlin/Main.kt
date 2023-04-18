@@ -1,11 +1,13 @@
+import common.Container
+import event.EventRunner
 import metric.MetricCollectRunner
 
 fun main(args: Array<String>) {
-    val runner = Runner()
+    val container = Container().apply { init() }
 
-    MetricCollectRunner().run()
+    val metricCollectRunner = MetricCollectRunner(container)
+    metricCollectRunner.run()
 
-    while (true) {
-        runner.run()
-    }
+    val eventRunner = EventRunner(container)
+    eventRunner.run()
 }

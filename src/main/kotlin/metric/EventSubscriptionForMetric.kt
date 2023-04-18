@@ -4,35 +4,17 @@ import event.*
 import io.micrometer.core.instrument.Counter
 
 class EventSubscriptionForMetric : EventSubscriber {
-    private var postChatCounter: Counter = Counter.builder("event_count")
-        .tag("type", "post_chat")
-        .register(MetricCollector.registry)
-    private var createRoomCounter: Counter = Counter.builder("event_count")
-        .tag("type", "create_room")
-        .register(MetricCollector.registry)
-    private var deleteRoomCounter: Counter = Counter.builder("event_count")
-        .tag("type", "delete_room")
-        .register(MetricCollector.registry)
+    private var postChatCounter = createCounter("post_chat")
+    private var createRoomCounter = createCounter("create_room")
+    private var deleteRoomCounter = createCounter("delete_room")
 
-    private var userEntranceCounter: Counter = Counter.builder("event_count")
-        .tag("type", "user_entrance")
-        .register(MetricCollector.registry)
-    private var userSignUpCounter: Counter = Counter.builder("event_count")
-        .tag("type", "user_signup")
-        .register(MetricCollector.registry)
-    private var userWithdrawCounter: Counter = Counter.builder("event_count")
-        .tag("type", "user_withdraw")
-        .register(MetricCollector.registry)
+    private var userEntranceCounter = createCounter("user_entrance")
+    private var userSignUpCounter = createCounter("user_signup")
+    private var userWithdrawCounter = createCounter("user_withdraw")
 
-    private var getRoomUserInvolvedCounter: Counter = Counter.builder("event_count")
-        .tag("type", "get_rooms_user_involved")
-        .register(MetricCollector.registry)
-    private var getChatsUserReceivedCounter: Counter = Counter.builder("event_count")
-        .tag("type", "get_chats_user_received")
-        .register(MetricCollector.registry)
-    private var getChatsInTheRoomCounter: Counter = Counter.builder("event_count")
-        .tag("type", "get_chats_in_the_room")
-        .register(MetricCollector.registry)
+    private var getRoomUserInvolvedCounter = createCounter("get_rooms_user_involved")
+    private var getChatsUserReceivedCounter = createCounter("get_chats_user_received")
+    private var getChatsInTheRoomCounter = createCounter("get_chats_in_the_room")
 
     override fun subscribe(event: Event) {
         when (event) {
@@ -47,4 +29,8 @@ class EventSubscriptionForMetric : EventSubscriber {
             is GetChatsInTheRoom -> getChatsInTheRoomCounter.increment()
         }
     }
+
+    private fun createCounter(typeTag: String) = Counter.builder("event_count")
+        .tag("type", typeTag)
+        .register(MetricCollector.registry)
 }

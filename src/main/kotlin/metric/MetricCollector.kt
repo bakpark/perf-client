@@ -17,6 +17,7 @@ import io.micrometer.prometheus.PrometheusMeterRegistry
 interface MetricCollector {
     companion object {
         val registry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
+
         init {
             Metrics.globalRegistry.add(registry)
 
@@ -29,10 +30,16 @@ interface MetricCollector {
             registry.config().meterFilter(
                 object : MeterFilter {
                     override fun map(id: Meter.Id): Meter.Id {
-                        return id.withTag(Tag.of("application", Constant.instanceName))
+                        return id.withTag(Tag.of("application", Constant.applicationName))
                     }
                 }
             )
+        }
+        fun create(prometheusPushUrl: String?): MetricCollector {
+            if (prometheusPushUrl == null) {
+                return EmptyCollector()
+            }
+            return MicrometerMetricPusher(prometheusPushUrl)
         }
     }
 
