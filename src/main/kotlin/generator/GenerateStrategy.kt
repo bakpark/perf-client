@@ -15,11 +15,11 @@ enum class GenerateStrategy(
     val rateGetChatsUserReceived: Int,
     val rateGetChatInTheRoom: Int
 ) {
-    USER_INCREASE(65, 0, 5, 0, 5, 10, 5, 5, 5),
-    ROOM_INCREASE(0, 0, 20, 10, 20, 35, 5, 5, 5),
+    USER_INCREASE(45, 15, 5, 5, 5, 10, 5, 5, 5),
+    ROOM_INCREASE(5, 5, 15, 10, 15, 35, 5, 5, 5),
     STABLE(10, 10, 10, 5, 10, 40, 5, 5, 5),
-    ROOM_DECREASE(5, 5, 5, 20, 10, 40, 5, 5, 5),
-    USER_DECREASE(5, 20, 5, 10, 5, 40, 5, 5, 5);
+    ROOM_DECREASE(0, 0, 5, 30, 10, 40, 5, 5, 5),
+    USER_DECREASE(10, 30, 0, 0, 5, 40, 5, 5, 5);
 
     fun drawEventType(): EventType {
         var rv = randomInt(100)

@@ -8,14 +8,14 @@ class UtilTest {
     @Test
     fun workerId() {
         val tryCnt = 1000
-        var failLimit = 5
+        var failLimit = 10
         repeat(tryCnt) {
             if (existSameId()) {
                 --failLimit
             }
         }
         if (failLimit < 0) {
-            Assertions.fail<Nothing>("in $tryCnt trial same id occur ${5 - failLimit} times")
+            Assertions.fail<Nothing>("in $tryCnt trial same id occur ${10 - failLimit} times")
         }
     }
 

@@ -31,17 +31,17 @@ class ModelEvaluator(
             log.info("user: {}({}) room: {}({})", model.users.size, userLimit, model.rooms.size, roomLimit)
             lastCalled = LocalDateTime.now()
         }
-        if (model.users.size * 3 < userLimit) {
-            return GenerateStrategy.USER_INCREASE
-        }
-        if (model.rooms.size * 3 < roomLimit) {
-            return GenerateStrategy.ROOM_INCREASE
-        }
-        if (model.rooms.size * 4 > roomLimit) {
+        if (model.rooms.size * 10 > roomLimit * 9) {
             return GenerateStrategy.ROOM_DECREASE
         }
-        if (model.users.size * 4 > userLimit) {
+        if (model.users.size * 10 > userLimit * 9) {
             return GenerateStrategy.USER_DECREASE
+        }
+        if (model.users.size * 5 < userLimit * 4) {
+            return GenerateStrategy.USER_INCREASE
+        }
+        if (model.rooms.size * 5 < roomLimit * 4) {
+            return GenerateStrategy.ROOM_INCREASE
         }
         return GenerateStrategy.STABLE
     }
