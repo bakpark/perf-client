@@ -27,7 +27,7 @@ class EventSubscriptionForRequest(
     override fun subscribe(event: Event) {
         requestBucket.waitForConsuming()
         val requestId = requestIdGenerator.generate()
-        responsePostProcessor.registerEvent(requestId, event)
+        responsePostProcessor.register(requestId, event)
 
         val future: CompletableFuture<HttpResponse<String>>
         when (event) {
