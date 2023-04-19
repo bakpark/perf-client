@@ -63,7 +63,7 @@ class ModelEventGenerator(
                     }
 
                     EventType.GET_ROOMS_USER_INVOLVED -> {
-                        return GetRoomsUserInvolvedEvent(model.randomRoom().roomId, Constant.contentLimitSize)
+                        return GetRoomsUserInvolvedEvent(model.randomUser().userId, Constant.contentLimitSize)
                     }
 
                     EventType.GET_CHATS_USER_RECEIVED -> {
