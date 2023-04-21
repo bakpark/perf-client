@@ -11,9 +11,9 @@ class RequestBucketTest {
         val rps = 1
         val bucket = RequestBucket(rps)
 
-        bucket.waitForConsuming()
+        bucket.drawRequestId()
         val point_1 = LocalDateTime.now()
-        bucket.waitForConsuming()
+        bucket.drawRequestId()
         val point_2 = LocalDateTime.now()
 
         println("$point_1, $point_2")
@@ -26,11 +26,11 @@ class RequestBucketTest {
         val rps = 500
         val bucket = RequestBucket(rps)
 
-        bucket.waitForConsuming()
+        bucket.drawRequestId()
         val point_1 = LocalDateTime.now()
-        bucket.waitForConsuming()
+        bucket.drawRequestId()
         val point_2 = LocalDateTime.now()
-        bucket.waitForConsuming()
+        bucket.drawRequestId()
         val point_3 = LocalDateTime.now()
 
         println("$point_1, $point_2 $point_3")

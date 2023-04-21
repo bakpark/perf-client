@@ -10,7 +10,6 @@ import exception.ModelException
 import model.Model
 import org.slf4j.LoggerFactory
 import java.net.http.HttpResponse
-import java.util.concurrent.CompletableFuture
 
 class ResponsePostProcessor(
     val model: Model,
@@ -43,10 +42,8 @@ class ResponsePostProcessor(
         }
     }
 
-    fun registerFuture(requestId: String, future: CompletableFuture<HttpResponse<String>>) {
-        future.thenAcceptAsync {
-            log.info("requestId:$requestId response:$it")
-        }
+    fun processResponse(requestId: String, response: HttpResponse<String>) {
+        log.info("requestId:$requestId response:${response.body()}")
     }
 
 }
