@@ -9,6 +9,7 @@ import metric.MetricCollector
 import model.EventSubscriptionForModel
 import model.Model
 import request.*
+import validation.ListValidator
 import kotlin.system.exitProcess
 
 class Container {
@@ -19,7 +20,7 @@ class Container {
     lateinit var modelEvaluator: ModelEvaluator
     lateinit var modelEventGenerator: ModelEventGenerator
 
-    lateinit var responseValidator: ResponseValidator
+    lateinit var listValidator: ListValidator
     lateinit var responsePostProcessor: ResponsePostProcessor
     lateinit var requestBucket: RequestBucket
     lateinit var perfHttpClient: PerfHttpClient
@@ -47,8 +48,8 @@ class Container {
                 messageGenerator = createIdGenerator("msg")
             )
 
-            responseValidator = ResponseValidator()
-            responsePostProcessor = ResponsePostProcessor(model, responseValidator)
+            listValidator = ListValidator()
+            responsePostProcessor = ResponsePostProcessor(model, listValidator)
             requestBucket = RequestBucket(props.rpsLimit, createIdGenerator("req"))
             perfHttpClient = PerfHttpClient(responsePostProcessor, requestBucket, props.rpsLimit)
 

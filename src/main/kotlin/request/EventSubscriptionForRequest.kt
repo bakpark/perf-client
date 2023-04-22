@@ -8,11 +8,11 @@ import java.net.http.HttpRequest
 import java.net.http.HttpRequest.BodyPublishers
 
 class EventSubscriptionForRequest(
-    val serverUrl: String,
-    val httpClient: PerfHttpClient
+    private val serverUrl: String,
+    private val httpClient: PerfHttpClient
 ) : EventSubscriber {
 
-    val objectMapper = ObjectMapper().apply {
+    private val objectMapper = ObjectMapper().apply {
         configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
     }
 
