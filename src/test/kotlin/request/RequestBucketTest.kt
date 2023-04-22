@@ -1,5 +1,6 @@
 package request
 
+import generator.IdGenerator
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
@@ -9,7 +10,7 @@ class RequestBucketTest {
     @Test
     fun requestTest() {
         val rps = 1
-        val bucket = RequestBucket(rps)
+        val bucket = RequestBucket(rps, IdGenerator("req"))
 
         bucket.drawRequestId()
         val point_1 = LocalDateTime.now()
@@ -24,7 +25,7 @@ class RequestBucketTest {
     @Test
     fun requestTest2() {
         val rps = 500
-        val bucket = RequestBucket(rps)
+        val bucket = RequestBucket(rps, IdGenerator("req"))
 
         bucket.drawRequestId()
         val point_1 = LocalDateTime.now()

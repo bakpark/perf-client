@@ -17,7 +17,7 @@ class GenerateStrategyTest {
                     it.rateGetChatsUserReceived +
                     it.rateGetRoomUserInvolved +
                     it.rateUserWithdraw
-            Assertions.assertEquals(sum, 100)
+            Assertions.assertEquals(sum, GenerateStrategy.RATE_SUM)
         }
     }
 }

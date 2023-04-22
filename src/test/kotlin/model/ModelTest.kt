@@ -44,7 +44,7 @@ class ModelTest {
                 model.randomUser().hashCode()
             ) { _, v -> if (v == null) 1 else v + 1 }
         }
-        map.forEach { (k, v) ->
+        map.forEach { (_, v) ->
             if (v > 20) {
                 Assertions.fail<Nothing>("Randomness cannot be guaranteed")
             }
