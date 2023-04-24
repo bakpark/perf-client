@@ -61,17 +61,17 @@ class ResponsePostProcessor(
 
         val actual = when (registered.remove(requestId)) {
             EventType.GET_ROOMS_USER_INVOLVED -> {
-                val roomsResponse = objectMapper.convertValue(response.body(), RoomsResponse::class.java)
+                val roomsResponse = objectMapper.readValue(response.body(), RoomsResponse::class.java)
                 roomsResponse.rooms
             }
 
             EventType.GET_CHATS_USER_RECEIVED -> {
-                val chatsResponse = objectMapper.convertValue(response.body(), ChatsResponse::class.java)
+                val chatsResponse = objectMapper.readValue(response.body(), ChatsResponse::class.java)
                 chatsResponse.chats
             }
 
             EventType.GET_CHATS_IN_THE_ROOM -> {
-                val chatsResponse = objectMapper.convertValue(response.body(), ChatsResponse::class.java)
+                val chatsResponse = objectMapper.readValue(response.body(), ChatsResponse::class.java)
                 chatsResponse.chats
             }
 
