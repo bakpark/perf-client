@@ -1,7 +1,6 @@
 package request
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import event.*
 import java.net.URI
 import java.net.http.HttpRequest
@@ -12,9 +11,7 @@ class EventSubscriptionForRequest(
     private val httpClient: PerfHttpClient
 ) : EventSubscriber {
 
-    private val objectMapper = ObjectMapper().apply {
-        configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
-    }
+    private val objectMapper = jacksonObjectMapper()
 
     override fun subscribe(event: Event) {
         when (event) {
@@ -44,9 +41,10 @@ class EventSubscriptionForRequest(
     }
 
     private fun requestPostRoom(event: CreateRoomEvent) {
+        val str = objectMapper.writeValueAsString(event)
         httpClient.sendAsync(
             HttpRequest.newBuilder()
-                .POST(BodyPublishers.ofString(objectMapper.writeValueAsString(event)))
+                .POST(BodyPublishers.ofString(str))
                 .uri(URI.create("$serverUrl/api/rooms"))
                 .header("Content-Type", "application/json")
                 .build(),
@@ -102,7 +100,7 @@ class EventSubscriptionForRequest(
         httpClient.sendAsync(
             HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create("$serverUrl/api/users/${event.userId}/rooms"))
+                .uri(URI.create("$serverUrl/api/users/${event.userId}/rooms?size=${event.limit}"))
                 .header("Content-Type", "application/json")
                 .build(),
             event
@@ -113,7 +111,7 @@ class EventSubscriptionForRequest(
         httpClient.sendAsync(
             HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create("$serverUrl/api/users/${event.userId}/chats"))
+                .uri(URI.create("$serverUrl/api/users/${event.userId}/chats?size=${event.limit}"))
                 .header("Content-Type", "application/json")
                 .build(),
             event
@@ -124,7 +122,7 @@ class EventSubscriptionForRequest(
         httpClient.sendAsync(
             HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create("$serverUrl/api/rooms/${event.roomId}/chats"))
+                .uri(URI.create("$serverUrl/api/rooms/${event.roomId}/chats?size=${event.limit}"))
                 .header("Content-Type", "application/json")
                 .build(),
             event

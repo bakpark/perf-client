@@ -1,13 +1,11 @@
 package request
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import event.*
 import exception.ModelException
 import io.micrometer.core.instrument.Counter
 import metric.MetricCollector
 import model.Model
-import org.slf4j.LoggerFactory
 import response.ChatsResponse
 import response.RoomsResponse
 import validation.ListValidator
@@ -17,9 +15,7 @@ class ResponsePostProcessor(
     private val model: Model,
     private val listValidator: ListValidator
 ) {
-    private val objectMapper = ObjectMapper().apply {
-        configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-    }
+    private val objectMapper = jacksonObjectMapper()
     private val registered = HashMap<String, EventType>()
 
     private val scoreCounter = Counter.builder("validation_score")
@@ -68,14 +64,17 @@ class ResponsePostProcessor(
                 val roomsResponse = objectMapper.convertValue(response.body(), RoomsResponse::class.java)
                 roomsResponse.rooms
             }
+
             EventType.GET_CHATS_USER_RECEIVED -> {
                 val chatsResponse = objectMapper.convertValue(response.body(), ChatsResponse::class.java)
                 chatsResponse.chats
             }
+
             EventType.GET_CHATS_IN_THE_ROOM -> {
                 val chatsResponse = objectMapper.convertValue(response.body(), ChatsResponse::class.java)
                 chatsResponse.chats
             }
+
             else -> emptyList()
         }
 

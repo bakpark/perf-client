@@ -1,5 +1,5 @@
 package response
 
-class ChatsResponse(
+data class ChatsResponse(
     val chats: List<String>
 )
