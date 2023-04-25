@@ -2,9 +2,9 @@ package model
 
 import event.*
 
-class EventSubscriptionForModel(
+class ModelEventSubscriptionForModel(
     private val model: Model
-) : EventSubscriber {
+) : ModelEventSubscriber {
     override fun subscribe(event: Event) {
         when (event) {
             is PostChatEvent -> onPostChat(event.roomId, event.senderId, event.message)

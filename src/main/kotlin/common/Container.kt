@@ -4,12 +4,12 @@ import event.ModelEventPublisher
 import generator.IdGenerator
 import generator.ModelEvaluator
 import generator.ModelEventGenerator
-import metric.EventSubscriptionForMetric
+import metric.ModelEventSubscriptionForMetric
 import metric.MetricCollector
-import model.EventSubscriptionForModel
+import model.ModelEventSubscriptionForModel
 import model.Model
 import request.*
-import validation.ListValidator
+import validation.ListStringGrader
 import kotlin.system.exitProcess
 
 class Container {
@@ -20,14 +20,14 @@ class Container {
     lateinit var modelEvaluator: ModelEvaluator
     lateinit var modelEventGenerator: ModelEventGenerator
 
-    lateinit var listValidator: ListValidator
-    lateinit var responsePostProcessor: ResponsePostProcessor
+    lateinit var listStringGrader: ListStringGrader
+    lateinit var responseScoreMarker: ResponseScoreMarker
     lateinit var requestBucket: RequestBucket
     lateinit var perfHttpClient: PerfHttpClient
 
-    lateinit var eventSubscriptionForModel: EventSubscriptionForModel
-    lateinit var eventSubscriptionForRequest: EventSubscriptionForRequest
-    lateinit var eventSubscriptionForMetric: EventSubscriptionForMetric
+    lateinit var eventSubscriptionForModel: ModelEventSubscriptionForModel
+    lateinit var eventSubscriptionForRequest: ModelEventSubscriptionForRequest
+    lateinit var eventSubscriptionForMetric: ModelEventSubscriptionForMetric
     lateinit var modelEventPublisher: ModelEventPublisher
 
     lateinit var metricCollector: MetricCollector
@@ -48,14 +48,14 @@ class Container {
                 messageGenerator = createIdGenerator("msg")
             )
 
-            listValidator = ListValidator()
-            responsePostProcessor = ResponsePostProcessor(model, listValidator)
+            listStringGrader = ListStringGrader()
+            responseScoreMarker = ResponseScoreMarker(model, listStringGrader)
             requestBucket = RequestBucket(props.rpsLimit, createIdGenerator("req"))
-            perfHttpClient = PerfHttpClient(responsePostProcessor, requestBucket, props.rpsLimit)
+            perfHttpClient = PerfHttpClient(responseScoreMarker, requestBucket, props.rpsLimit)
 
-            eventSubscriptionForModel = EventSubscriptionForModel(model)
-            eventSubscriptionForRequest = EventSubscriptionForRequest(props.serverUrl, perfHttpClient)
-            eventSubscriptionForMetric = EventSubscriptionForMetric()
+            eventSubscriptionForModel = ModelEventSubscriptionForModel(model)
+            eventSubscriptionForRequest = ModelEventSubscriptionForRequest(props.serverUrl, perfHttpClient)
+            eventSubscriptionForMetric = ModelEventSubscriptionForMetric()
             modelEventPublisher = ModelEventPublisher(
                 eventSubscriptionForModel = eventSubscriptionForModel,
                 eventSubscriptionForRequest = eventSubscriptionForRequest,

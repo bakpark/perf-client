@@ -1,7 +1,5 @@
 package event
 
-import event.Event
-
-interface EventSubscriber {
+interface ModelEventSubscriber {
     fun subscribe(event: Event)
 }

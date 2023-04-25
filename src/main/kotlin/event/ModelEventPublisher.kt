@@ -1,13 +1,13 @@
 package event
 
-import metric.EventSubscriptionForMetric
-import model.EventSubscriptionForModel
-import request.EventSubscriptionForRequest
+import metric.ModelEventSubscriptionForMetric
+import model.ModelEventSubscriptionForModel
+import request.ModelEventSubscriptionForRequest
 
 class ModelEventPublisher(
-    private val eventSubscriptionForModel: EventSubscriptionForModel,
-    private val eventSubscriptionForRequest: EventSubscriptionForRequest,
-    private val eventSubscriptionForMetric: EventSubscriptionForMetric
+    private val eventSubscriptionForModel: ModelEventSubscriptionForModel,
+    private val eventSubscriptionForRequest: ModelEventSubscriptionForRequest,
+    private val eventSubscriptionForMetric: ModelEventSubscriptionForMetric
 ) {
     fun publish(event: Event) {
         eventSubscriptionForModel.subscribe(event)

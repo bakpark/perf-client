@@ -1,5 +1,6 @@
 package request
 
+import event.EventType
 import generator.IdGenerator
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -12,9 +13,9 @@ class RequestBucketTest {
         val rps = 1
         val bucket = RequestBucket(rps, IdGenerator("req"))
 
-        bucket.drawRequestId()
+        bucket.activateRequest(EventType.USER_SIGNUP)
         val point_1 = LocalDateTime.now()
-        bucket.drawRequestId()
+        bucket.activateRequest(EventType.USER_SIGNUP)
         val point_2 = LocalDateTime.now()
 
         println("$point_1, $point_2")
@@ -27,11 +28,11 @@ class RequestBucketTest {
         val rps = 500
         val bucket = RequestBucket(rps, IdGenerator("req"))
 
-        bucket.drawRequestId()
+        bucket.activateRequest(EventType.USER_SIGNUP)
         val point_1 = LocalDateTime.now()
-        bucket.drawRequestId()
+        bucket.activateRequest(EventType.USER_SIGNUP)
         val point_2 = LocalDateTime.now()
-        bucket.drawRequestId()
+        bucket.activateRequest(EventType.USER_SIGNUP)
         val point_3 = LocalDateTime.now()
 
         println("$point_1, $point_2 $point_3")

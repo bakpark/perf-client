@@ -16,7 +16,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 class PerfHttpClient(
-    private val responsePostProcessor: ResponsePostProcessor,
+    private val responseScoreMarker: ResponseScoreMarker,
     private val requestBucket: RequestBucket,
     private val rpsLimit: Int
 ) {
@@ -33,23 +33,41 @@ class PerfHttpClient(
         .executor(executor)
         .connectTimeout(Duration.ofSeconds(10L))
         .build()
+
     private val requestCounter = Counter.builder("request_count")
+        .register(MetricCollector.registry)
+    private val successResponseCounter = Counter.builder("response_success_count")
         .register(MetricCollector.registry)
     private val failResponseCounter = Counter.builder("response_fail_count")
         .register(MetricCollector.registry)
 
+    /**
+     * The rate of the request is throttled by the requestBucket.
+     */
     fun sendAsync(request: HttpRequest, event: Event) {
-        val requestId = requestBucket.drawRequestId()
+        val activeRequest = requestBucket.activateRequest(event.type())
 
-        responsePostProcessor.register(requestId, event)
+        val expected = responseScoreMarker.getExpectedResult(event)
 
-        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-            .thenApplyAsync({ responsePostProcessor.processResponse(requestId, it) }, executor)
-            .exceptionally {
-                logger.error("http send fail", it)
-                failResponseCounter.increment()
-            }
         requestCounter.increment()
+        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+            .thenApplyAsync({
+                if (it.statusCode() != 200) {
+                    logger.error("http send fail requestId:{} response:{}", activeRequest.requestId, it)
+                    failResponseCounter.increment()
+                    return@thenApplyAsync
+                }
+
+                logger.debug("http send success requestId:{} response:{}", activeRequest.requestId, it)
+                successResponseCounter.increment()
+                responseScoreMarker.scoring(activeRequest, expected, it)
+            }, executor)
+            .exceptionally {
+                logger.error("http send fail requestId:{} requestedAt:{}", activeRequest.requestId, activeRequest.requestAt, it)
+                failResponseCounter.increment()
+            }.thenRun {
+                requestBucket.deactivateRequest(activeRequest)
+            }
     }
 
 }

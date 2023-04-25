@@ -1,24 +1,13 @@
 package validation
 
-class ListValidator {
-    private val registered = HashMap<String, List<String>>()
-    fun register(requestId: String, expected: List<String>) {
-        registered[requestId] = expected
-    }
-
-    fun deregister(requestId: String) {
-        registered.remove(requestId)
-    }
-
-    fun validate(requestId: String, actual: List<String>): Double {
-        val drawn = registered.remove(requestId) ?: return 0.0
-
+class ListStringGrader {
+    fun scoring(expected: List<String>, actual: List<String>): Double {
         var unknown = 0
         var missed = 0
 
         val sortedActual = actual.sorted()
         val actualSize = sortedActual.size
-        val sortedExpected = drawn.sorted()
+        val sortedExpected = expected.sorted()
         val expectedSize = sortedExpected.size
 
         var j = 0

@@ -6,10 +6,10 @@ import java.net.URI
 import java.net.http.HttpRequest
 import java.net.http.HttpRequest.BodyPublishers
 
-class EventSubscriptionForRequest(
+class ModelEventSubscriptionForRequest(
     private val serverUrl: String,
     private val httpClient: PerfHttpClient
-) : EventSubscriber {
+) : ModelEventSubscriber {
 
     private val objectMapper = jacksonObjectMapper()
 

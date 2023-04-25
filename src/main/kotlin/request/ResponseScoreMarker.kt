@@ -8,58 +8,41 @@ import metric.MetricCollector
 import model.Model
 import response.ChatsResponse
 import response.RoomsResponse
-import validation.ListValidator
+import validation.ListStringGrader
 import java.net.http.HttpResponse
 
-class ResponsePostProcessor(
+class ResponseScoreMarker(
     private val model: Model,
-    private val listValidator: ListValidator
+    private val listStringGrader: ListStringGrader
 ) {
     private val objectMapper = jacksonObjectMapper()
-    private val registered = HashMap<String, EventType>()
 
     private val scoreCounter = Counter.builder("validation_score")
         .register(MetricCollector.registry)
-    private val failResponseCounter = Counter.builder("response_fail_count")
-        .register(MetricCollector.registry)
 
-    fun register(requestId: String, event: Event) {
-        when (event) {
+    fun getExpectedResult(event: Event): List<String> {
+        return when (event) {
             is GetRoomsUserInvolvedEvent -> {
-                val expected = model.users[event.userId]?.rooms?.map { it.roomId }
+                model.users[event.userId]?.rooms?.map { it.roomId }
                     ?: throw ModelException("userId not found")
-                registered[requestId] = EventType.GET_ROOMS_USER_INVOLVED
-                listValidator.register(requestId, expected)
             }
 
             is GetChatsUserReceivedEvent -> {
-                val expected = model.users[event.userId]?.getChats()?.map { it.message }
+                model.users[event.userId]?.getChats()?.map { it.message }
                     ?: throw ModelException("userId not found")
-                registered[requestId] = EventType.GET_CHATS_USER_RECEIVED
-                listValidator.register(requestId, expected)
             }
 
             is GetChatsInTheRoom -> {
-                val expected = model.rooms[event.roomId]?.getChats()?.map { it.message }
+                model.rooms[event.roomId]?.getChats()?.map { it.message }
                     ?: throw ModelException("roomId not found")
-                registered[requestId] = EventType.GET_CHATS_IN_THE_ROOM
-                listValidator.register(requestId, expected)
             }
+
+            else -> emptyList()
         }
     }
 
-    fun deregister(requestId: String) {
-        registered.remove(requestId)
-        listValidator.deregister(requestId)
-    }
-
-    fun processResponse(requestId: String, response: HttpResponse<String>) {
-        if (response.statusCode() != 200 || registered[requestId] == null) {
-            failResponseCounter.increment()
-            return
-        }
-
-        val actual = when (registered.remove(requestId)) {
+    fun scoring(activeRequest: ActiveRequest, expected: List<String>, response: HttpResponse<String>) {
+        val actual = when (activeRequest.eventType) {
             EventType.GET_ROOMS_USER_INVOLVED -> {
                 val roomsResponse = objectMapper.readValue(response.body(), RoomsResponse::class.java)
                 roomsResponse.rooms
@@ -78,8 +61,7 @@ class ResponsePostProcessor(
             else -> emptyList()
         }
 
-        val score = listValidator.validate(requestId, actual)
+        val score = listStringGrader.scoring(expected, actual)
         scoreCounter.increment(score)
     }
-
 }
