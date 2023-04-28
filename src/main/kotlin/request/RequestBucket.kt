@@ -43,7 +43,7 @@ class RequestBucket(
     }
 
     fun deactivateRequest(activeRequest: ActiveRequest) {
-        counters[activeRequest.eventType]!!.increment()
+        counters[activeRequest.eventType]!!.increment(-1.0)
     }
 
     private fun createActiveRequest(eventType: EventType): ActiveRequest {

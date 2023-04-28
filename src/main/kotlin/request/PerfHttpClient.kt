@@ -12,8 +12,6 @@ import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.Executor
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
-import kotlin.math.max
-import kotlin.math.min
 
 class PerfHttpClient(
     private val responseScoreMarker: ResponseScoreMarker,
@@ -22,11 +20,11 @@ class PerfHttpClient(
 ) {
     private val logger = LoggerFactory.getLogger(PerfHttpClient::class.java)
     private val executor: Executor = object : ThreadPoolExecutor(
-        min(rpsLimit, 10),
-        max(min(rpsLimit, 10), rpsLimit / 10),
+        10,
+        20,
         0,
         TimeUnit.SECONDS,
-        ArrayBlockingQueue(rpsLimit * 2)
+        ArrayBlockingQueue(100)
     ) {}
     private val httpClient: HttpClient = HttpClient
         .newBuilder()
@@ -44,26 +42,33 @@ class PerfHttpClient(
     /**
      * The rate of the request is throttled by the requestBucket.
      */
-    fun sendAsync(request: HttpRequest, event: Event) {
+    fun sendAsync(request: HttpRequest.Builder, event: Event) {
         val activeRequest = requestBucket.activateRequest(event.type())
-
         val expected = responseScoreMarker.getExpectedResult(event)
-
         requestCounter.increment()
-        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-            .thenApplyAsync({
-                if (it.statusCode() != 200) {
-                    logger.error("http send fail requestId:{} response:{}", activeRequest.requestId, it)
-                    failResponseCounter.increment()
-                    return@thenApplyAsync
-                }
 
-                logger.debug("http send success requestId:{} response:{}", activeRequest.requestId, it)
-                successResponseCounter.increment()
-                responseScoreMarker.scoring(activeRequest, expected, it)
-            }, executor)
+        httpClient.sendAsync(
+            request
+                .header("Content-Type", "application/json")
+                .header("Request-Id", activeRequest.requestId)
+                .timeout(Duration.ofSeconds(10L))
+                .build(),
+            HttpResponse.BodyHandlers.ofString()
+        ).thenApplyAsync({
+            if (it.statusCode() != 200) {
+                logger.error("fail requestId:{} response:{}", activeRequest.requestId, it)
+                failResponseCounter.increment()
+                return@thenApplyAsync
+            }
+
+            logger.debug(
+                "success requestId:{} response:{} requestedAt:{}", activeRequest.requestId, it, activeRequest.requestAt
+            )
+            successResponseCounter.increment()
+            responseScoreMarker.scoring(activeRequest, expected, it)
+        }, executor)
             .exceptionally {
-                logger.error("http send fail requestId:{} requestedAt:{}", activeRequest.requestId, activeRequest.requestAt, it)
+                logger.error("fail requestId:{} requestedAt:{}", activeRequest.requestId, activeRequest.requestAt, it)
                 failResponseCounter.increment()
             }.thenRun {
                 requestBucket.deactivateRequest(activeRequest)

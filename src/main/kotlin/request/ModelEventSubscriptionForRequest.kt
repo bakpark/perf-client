@@ -34,8 +34,7 @@ class ModelEventSubscriptionForRequest(
             HttpRequest.newBuilder()
                 .POST(BodyPublishers.ofString(objectMapper.writeValueAsString(event)))
                 .uri(URI.create("$serverUrl/api/chats"))
-                .header("Content-Type", "application/json")
-                .build(),
+                .header("Content-Type", "application/json"),
             event
         )
     }
@@ -46,8 +45,7 @@ class ModelEventSubscriptionForRequest(
             HttpRequest.newBuilder()
                 .POST(BodyPublishers.ofString(str))
                 .uri(URI.create("$serverUrl/api/rooms"))
-                .header("Content-Type", "application/json")
-                .build(),
+                .header("Content-Type", "application/json"),
             event
         )
     }
@@ -56,9 +54,7 @@ class ModelEventSubscriptionForRequest(
         httpClient.sendAsync(
             HttpRequest.newBuilder()
                 .DELETE()
-                .uri(URI.create("$serverUrl/api/rooms/${event.roomId}"))
-                .header("Content-Type", "application/json")
-                .build(),
+                .uri(URI.create("$serverUrl/api/rooms/${event.roomId}")),
             event
         )
     }
@@ -68,8 +64,7 @@ class ModelEventSubscriptionForRequest(
             HttpRequest.newBuilder()
                 .POST(BodyPublishers.ofString(objectMapper.writeValueAsString(event)))
                 .uri(URI.create("$serverUrl/api/entrances"))
-                .header("Content-Type", "application/json")
-                .build(),
+                .header("Content-Type", "application/json"),
             event
         )
     }
@@ -78,9 +73,7 @@ class ModelEventSubscriptionForRequest(
         httpClient.sendAsync(
             HttpRequest.newBuilder()
                 .POST(BodyPublishers.ofString(objectMapper.writeValueAsString(event)))
-                .uri(URI.create("$serverUrl/api/users"))
-                .header("Content-Type", "application/json")
-                .build(),
+                .uri(URI.create("$serverUrl/api/users")),
             event
         )
     }
@@ -89,9 +82,7 @@ class ModelEventSubscriptionForRequest(
         httpClient.sendAsync(
             HttpRequest.newBuilder()
                 .DELETE()
-                .uri(URI.create("$serverUrl/api/users/${event.userId}"))
-                .header("Content-Type", "application/json")
-                .build(),
+                .uri(URI.create("$serverUrl/api/users/${event.userId}")),
             event
         )
     }
@@ -100,9 +91,7 @@ class ModelEventSubscriptionForRequest(
         httpClient.sendAsync(
             HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create("$serverUrl/api/users/${event.userId}/rooms?size=${event.limit}"))
-                .header("Content-Type", "application/json")
-                .build(),
+                .uri(URI.create("$serverUrl/api/users/${event.userId}/rooms?size=${event.limit}")),
             event
         )
     }
@@ -111,9 +100,7 @@ class ModelEventSubscriptionForRequest(
         httpClient.sendAsync(
             HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create("$serverUrl/api/users/${event.userId}/chats?size=${event.limit}"))
-                .header("Content-Type", "application/json")
-                .build(),
+                .uri(URI.create("$serverUrl/api/users/${event.userId}/chats?size=${event.limit}")),
             event
         )
     }
@@ -122,9 +109,7 @@ class ModelEventSubscriptionForRequest(
         httpClient.sendAsync(
             HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create("$serverUrl/api/rooms/${event.roomId}/chats?size=${event.limit}"))
-                .header("Content-Type", "application/json")
-                .build(),
+                .uri(URI.create("$serverUrl/api/rooms/${event.roomId}/chats?size=${event.limit}")),
             event
         )
     }
