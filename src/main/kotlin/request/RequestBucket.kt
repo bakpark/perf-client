@@ -3,7 +3,8 @@ package request
 import common.minusNanos
 import event.EventType
 import generator.IdGenerator
-import io.micrometer.core.instrument.Counter
+import io.micrometer.core.instrument.Gauge
+import metric.CounterGauge
 import metric.MetricCollector
 import java.time.LocalDateTime
 
@@ -13,11 +14,12 @@ class RequestBucket(
 ) {
     private val nsBetween = (1_000_000_000L / requestPerSecond)
     private var last: LocalDateTime = LocalDateTime.now()
-    private val counters: HashMap<EventType, Counter> = HashMap()
+    private val gaugeMap: HashMap<EventType, CounterGauge> = HashMap()
 
     init {
         EventType.values().forEach {
-            counters[it] = Counter.builder("active_request_count")
+            gaugeMap[it] = CounterGauge()
+            Gauge.builder("active_request_count") { gaugeMap[it]!!.count }
                 .tag("type", it.name)
                 .register(MetricCollector.registry)
         }
@@ -43,11 +45,11 @@ class RequestBucket(
     }
 
     fun deactivateRequest(activeRequest: ActiveRequest) {
-        counters[activeRequest.eventType]!!.increment(-1.0)
+        gaugeMap[activeRequest.eventType]!!.decrement()
     }
 
     private fun createActiveRequest(eventType: EventType): ActiveRequest {
-        counters[eventType]!!.increment()
+        gaugeMap[eventType]!!.increment()
         return ActiveRequest(requestIdGenerator.generate(), eventType, LocalDateTime.now())
     }
 }
