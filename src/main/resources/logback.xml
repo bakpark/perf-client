@@ -4,6 +4,9 @@
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
@@ -14,12 +17,13 @@
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
     </appender>
 
-    <logger name="request" level="debug">
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
-    </logger>
-<!--    <root level="info">-->
-<!--        <appender-ref ref="STDOUT"/>-->
-<!--    </root>-->
+    </root>
 </configuration>

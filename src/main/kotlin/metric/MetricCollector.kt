@@ -12,10 +12,12 @@ import io.micrometer.core.instrument.binder.system.ProcessorMetrics
 import io.micrometer.core.instrument.config.MeterFilter
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
+import org.slf4j.LoggerFactory
 
 
 interface MetricCollector {
     companion object {
+        val logger = LoggerFactory.getLogger(MetricCollector::class.java)
         val registry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
 
         init {
@@ -35,11 +37,17 @@ interface MetricCollector {
                 }
             )
         }
+
         fun create(prometheusPushUrl: String?): MetricCollector {
             if (prometheusPushUrl == null) {
                 return EmptyCollector()
             }
-            return MicrometerMetricPusher(prometheusPushUrl)
+            return try {
+                MicrometerMetricPusher(prometheusPushUrl)
+            } catch (e: Exception) {
+                logger.error("invalid prometheus pushgw url url:{}", prometheusPushUrl, e)
+                EmptyCollector()
+            }
         }
     }
 
